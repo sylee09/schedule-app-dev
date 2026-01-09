@@ -82,7 +82,9 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("deleteSchedule")
     void deleteSchedule() {
-        scheduleService.deleteSchedule(1L);
-        assertThatThrownBy(()->scheduleService.viewSchedule(1L)).isInstanceOf(ScheduleNotFoundException.class);
+        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("lee", "제목", "내용");
+        ScheduleResponseDto scheduleResponse = scheduleService.createSchedule(dto);
+        scheduleService.deleteSchedule(scheduleResponse.getId());
+        assertThatThrownBy(()->scheduleService.viewSchedule(scheduleResponse.getId())).isInstanceOf(ScheduleNotFoundException.class);
     }
 }
