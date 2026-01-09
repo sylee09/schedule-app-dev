@@ -75,4 +75,15 @@ class ScheduleControllerTest {
 
         assertThatThrownBy(() -> scheduleController.updateSchedule(10000L, scheduleUpdateRequestDto)).isInstanceOf(ScheduleNotFoundException.class);
     }
+
+    @Test
+    @DisplayName("deleteSchedule")
+    public void deleteSchedule() {
+        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("lee", "제목", "내용");
+        ResponseEntity<ScheduleResponseDto> schedule = scheduleController.createSchedule(dto1);
+        ResponseEntity<Void> voidResponseEntity = scheduleController.deleteSchedule(schedule.getBody().getId());
+        assertThat(voidResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        assertThatThrownBy(() -> scheduleController.getScheduleById(schedule.getBody().getId())).isInstanceOf(ScheduleNotFoundException.class);
+    }
 }
