@@ -28,4 +28,9 @@ public class ScheduleService {
                 .toList();
     }
 
+    public ScheduleResponse viewSchedule(Long id) {
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new ScheduleNotFoundException("Schedule not found"));
+        return new ScheduleResponse(schedule);
+    }
+
 }
