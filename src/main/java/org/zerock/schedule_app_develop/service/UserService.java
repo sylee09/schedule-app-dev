@@ -36,6 +36,11 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
+    @Transactional
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+
 
 
 }

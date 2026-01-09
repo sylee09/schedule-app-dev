@@ -51,4 +51,14 @@ class UserServiceTest {
 
         assertThatThrownBy(()->userService.findById(1000L)).isInstanceOf(UserNotFoundException.class);
     }
+
+    @Test
+    void deleteById() {
+        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com");
+        UserResponseDto user = userService.createUser(dto);
+
+        userService.deleteById(user.getId());
+
+        assertThatThrownBy(()->userService.findById(user.getId())).isInstanceOf(UserNotFoundException.class);
+    }
 }
