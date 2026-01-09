@@ -50,9 +50,9 @@ class ScheduleServiceTest {
         assertThat(scheduleResponseDtos.get(0).getUserName()).isEqualTo("lee");
         assertThat(scheduleResponseDtos.get(0).getSubject()).isEqualTo("제목");
         assertThat(scheduleResponseDtos.get(0).getContent()).isEqualTo("내용");
-        assertThat(scheduleResponseDtos.get(0).getStartTime()).isNotNull();
+        assertThat(scheduleResponseDtos.get(0).getCreatedTime()).isNotNull();
         assertThat(scheduleResponseDtos.get(0).getModifiedTime()).isNotNull();
-        assertThat(scheduleResponseDtos.get(0).getModifiedTime()).isEqualTo(scheduleResponseDtos.get(0).getStartTime());
+        assertThat(scheduleResponseDtos.get(0).getModifiedTime()).isEqualTo(scheduleResponseDtos.get(0).getCreatedTime());
     }
 
     @Test
@@ -60,7 +60,7 @@ class ScheduleServiceTest {
     void viewSchedule() {
         ScheduleResponseDto scheduleResponseDto = scheduleService.viewSchedule(1L);
         assertThat(scheduleResponseDto.getUserName()).isEqualTo("lee");
-        assertThat(scheduleResponseDto.getStartTime()).isNotNull();
+        assertThat(scheduleResponseDto.getCreatedTime()).isNotNull();
 
         assertThatThrownBy(() -> scheduleService.viewSchedule(100L)).isInstanceOf(ScheduleNotFoundException.class);
     }
@@ -76,7 +76,7 @@ class ScheduleServiceTest {
         ScheduleResponseDto scheduleResponseDto = scheduleService.viewSchedule(scheduleResponse.getId());
         assertThat(scheduleResponseDto.getSubject()).isEqualTo("수정");
         assertThat(scheduleResponseDto.getContent()).isEqualTo("수정");
-        assertThat(scheduleResponseDto.getModifiedTime()).isNotEqualTo(scheduleResponseDto.getStartTime());
+        assertThat(scheduleResponseDto.getModifiedTime()).isNotEqualTo(scheduleResponseDto.getCreatedTime());
     }
 
     @Test
