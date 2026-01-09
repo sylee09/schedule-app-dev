@@ -7,9 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.schedule_app_develop.dto.ScheduleCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.ScheduleResponseDto;
 import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
+import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.entity.Schedule;
+import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.error.ScheduleNotFoundException;
+import org.zerock.schedule_app_develop.error.UserNotFoundException;
 import org.zerock.schedule_app_develop.repository.ScheduleRepository;
+import org.zerock.schedule_app_develop.repository.UserRepository;
 
 import java.util.List;
 
@@ -19,10 +23,13 @@ import java.util.List;
 public class ScheduleService {
     @Autowired
     private final ScheduleRepository scheduleRepository;
+    @Autowired
+    private final UserRepository userRepository;
 
     @Transactional
     public ScheduleResponseDto createSchedule(ScheduleCreateRequestDto dto) {
-        Schedule save = scheduleRepository.save(new Schedule(dto));
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("user not found"));
+        Schedule save = scheduleRepository.save(new Schedule(dto, user));
         return new ScheduleResponseDto(save);
     }
 

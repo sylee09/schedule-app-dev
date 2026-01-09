@@ -1,6 +1,7 @@
 package org.zerock.schedule_app_develop.controller;
 
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.zerock.schedule_app_develop.dto.ScheduleCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.ScheduleResponseDto;
 import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
+import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
+import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.error.ScheduleNotFoundException;
+import org.zerock.schedule_app_develop.repository.UserRepository;
 
 import java.util.List;
 
@@ -23,11 +27,19 @@ class ScheduleControllerTest {
 
     @Autowired
     private ScheduleController scheduleController;
+    private User user;
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        user = userRepository.save(new User(new UserCreateRequestDto("tester", "tester@gmail.com")));
+    }
 
     @Test
     @DisplayName("createSchedule")
     void createSchedule() {
-        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("lee", "제목", "내용");
+        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용", user.getId());
         ResponseEntity<ScheduleResponseDto> schedule = scheduleController.createSchedule(dto);
         assertThat(schedule.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(schedule.getBody().getId()).isNotNull();
@@ -39,9 +51,10 @@ class ScheduleControllerTest {
     @Test
     @DisplayName("getAllSchedules")
     void getAllSchedules() {
-        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("lee", "제목", "내용");
+        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용", user.getId());
+        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("제목", "내용",user.getId());
         scheduleController.createSchedule(dto1);
-        ScheduleCreateRequestDto dto2 = new ScheduleCreateRequestDto("lee", "제목", "내용");
+        ScheduleCreateRequestDto dto2 = new ScheduleCreateRequestDto("제목", "내용",user.getId());
         scheduleController.createSchedule(dto2);
 
         ResponseEntity<List<ScheduleResponseDto>> allSchedules = scheduleController.getAllSchedules();
@@ -52,7 +65,7 @@ class ScheduleControllerTest {
     @Test
     @DisplayName("getScheduleById")
     void getScheduleById() {
-        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("lee", "제목", "내용");
+        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("제목", "내용",user.getId());
         ResponseEntity<ScheduleResponseDto> schedule = scheduleController.createSchedule(dto1);
         ResponseEntity<ScheduleResponseDto> scheduleById = scheduleController.getScheduleById(schedule.getBody().getId());
         assertThat(scheduleById.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -65,7 +78,7 @@ class ScheduleControllerTest {
     @Test
     @DisplayName("updateSchedule")
     void updateSchedule() {
-        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("lee", "제목", "내용");
+        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("제목", "내용", user.getId());
         ResponseEntity<ScheduleResponseDto> schedule = scheduleController.createSchedule(dto1);
         ScheduleUpdateRequestDto scheduleUpdateRequestDto = new ScheduleUpdateRequestDto("modified", "modified");
         ResponseEntity<ScheduleResponseDto> updated = scheduleController.updateSchedule(schedule.getBody().getId(), scheduleUpdateRequestDto);
@@ -79,7 +92,7 @@ class ScheduleControllerTest {
     @Test
     @DisplayName("deleteSchedule")
     public void deleteSchedule() {
-        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("lee", "제목", "내용");
+        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("제목", "내용", user.getId());
         ResponseEntity<ScheduleResponseDto> schedule = scheduleController.createSchedule(dto1);
         ResponseEntity<Void> voidResponseEntity = scheduleController.deleteSchedule(schedule.getBody().getId());
         assertThat(voidResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);

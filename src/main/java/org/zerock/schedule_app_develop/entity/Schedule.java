@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.zerock.schedule_app_develop.dto.ScheduleCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
 
@@ -16,14 +15,18 @@ public class Schedule extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userName;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
+    private User user;
+
     private String subject;
     private String content;
 
-    public Schedule(ScheduleCreateRequestDto dto) {
-        this.userName = dto.getUserName();
+    public Schedule(ScheduleCreateRequestDto dto, User user) {
         this.subject = dto.getSubject();
         this.content = dto.getContent();
+        this.user = user;
     }
 
     public void modify(ScheduleUpdateRequestDto dto) {
