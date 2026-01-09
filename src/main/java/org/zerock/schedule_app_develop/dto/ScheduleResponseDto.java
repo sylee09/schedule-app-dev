@@ -6,14 +6,16 @@ import org.zerock.schedule_app_develop.entity.Schedule;
 import java.time.LocalDateTime;
 
 @Getter
-public class ScheduleResponse {
+public class ScheduleResponseDto {
+    private Long id;
     private String userName;
     private String subject;
     private String content;
     private LocalDateTime startTime;
     private LocalDateTime modifiedTime;
 
-    public ScheduleResponse(Schedule schedule) {
+    public ScheduleResponseDto(Schedule schedule) {
+        this.id = schedule.getId();
         this.userName = schedule.getUserName();
         this.subject = schedule.getSubject();
         this.content = schedule.getContent();

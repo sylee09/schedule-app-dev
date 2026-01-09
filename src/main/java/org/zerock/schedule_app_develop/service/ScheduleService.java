@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.schedule_app_develop.dto.ScheduleCreateRequestDto;
-import org.zerock.schedule_app_develop.dto.ScheduleResponse;
+import org.zerock.schedule_app_develop.dto.ScheduleResponseDto;
 import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
 import org.zerock.schedule_app_develop.entity.Schedule;
 import org.zerock.schedule_app_develop.error.ScheduleNotFoundException;
@@ -21,29 +21,30 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     @Transactional
-    public void createSchedule(ScheduleCreateRequestDto dto) {
-        scheduleRepository.save(new Schedule(dto));
+    public ScheduleResponseDto createSchedule(ScheduleCreateRequestDto dto) {
+        Schedule save = scheduleRepository.save(new Schedule(dto));
+        return new ScheduleResponseDto(save);
     }
 
-    public List<ScheduleResponse> viewAllSchedules() {
+    public List<ScheduleResponseDto> viewAllSchedules() {
         return scheduleRepository.findAll()
                 .stream()
-                .map(schedule -> new ScheduleResponse(schedule))
+                .map(schedule -> new ScheduleResponseDto(schedule))
                 .toList();
     }
 
-    public ScheduleResponse viewSchedule(Long id) {
+    public ScheduleResponseDto viewSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new ScheduleNotFoundException("Schedule not found"));
-        return new ScheduleResponse(schedule);
+        return new ScheduleResponseDto(schedule);
     }
 
     @Transactional
-    public ScheduleResponse updateSchedule(Long id, ScheduleUpdateRequestDto dto) {
+    public ScheduleResponseDto updateSchedule(Long id, ScheduleUpdateRequestDto dto) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new ScheduleNotFoundException("Schedule not found"));
         schedule.setSubject(dto.getSubject());
         schedule.setContent(dto.getContent());
         scheduleRepository.saveAndFlush(schedule);
-        return new ScheduleResponse(schedule);
+        return new ScheduleResponseDto(schedule);
     }
 
     @Transactional
