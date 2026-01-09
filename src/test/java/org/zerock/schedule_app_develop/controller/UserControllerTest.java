@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +28,17 @@ class UserControllerTest {
         ResponseEntity<UserResponseDto> user = userController.createUser(dto);
         assertThat(user.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(user.getBody().getUsername()).isEqualTo("tester");
+    }
+
+    @Test
+    void getAllUsers() {
+        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com");
+        userController.createUser(dto);
+        userController.createUser(dto);
+
+        ResponseEntity<List<UserResponseDto>> allUsers = userController.getAllUsers();
+        assertThat(allUsers.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(allUsers.getBody().size()).isEqualTo(2);
     }
 
 }
