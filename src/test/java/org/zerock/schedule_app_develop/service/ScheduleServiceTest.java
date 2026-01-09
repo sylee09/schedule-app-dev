@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zerock.schedule_app_develop.dto.ScheduleCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.ScheduleResponse;
+import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
 import org.zerock.schedule_app_develop.error.ScheduleNotFoundException;
 
 import java.util.List;
@@ -51,6 +52,7 @@ class ScheduleServiceTest {
         assertThat(scheduleResponses.get(0).getContent()).isEqualTo("내용");
         assertThat(scheduleResponses.get(0).getStartTime()).isNotNull();
         assertThat(scheduleResponses.get(0).getModifiedTime()).isNotNull();
+        assertThat(scheduleResponses.get(0).getModifiedTime()).isEqualTo(scheduleResponses.get(0).getStartTime());
     }
 
     @Test
@@ -60,6 +62,18 @@ class ScheduleServiceTest {
         assertThat(scheduleResponse.getUserName()).isEqualTo("lee");
         assertThat(scheduleResponse.getStartTime()).isNotNull();
 
-        assertThatThrownBy(()-> scheduleService.viewSchedule(100L)).isInstanceOf(ScheduleNotFoundException.class);
+        assertThatThrownBy(() -> scheduleService.viewSchedule(100L)).isInstanceOf(ScheduleNotFoundException.class);
     }
+
+    @Test
+    @DisplayName("updateSchedule")
+    void updateSchedule() {
+        ScheduleUpdateRequestDto scheduleUpdateRequestDto = new ScheduleUpdateRequestDto("수정", "수정");
+        scheduleService.updateSchedule(1L, scheduleUpdateRequestDto);
+        ScheduleResponse scheduleResponse = scheduleService.viewSchedule(1L);
+        assertThat(scheduleResponse.getSubject()).isEqualTo("수정");
+        assertThat(scheduleResponse.getContent()).isEqualTo("수정");
+        assertThat(scheduleResponse.getModifiedTime()).isNotEqualTo(scheduleResponse.getStartTime());
+    }
+
 }
