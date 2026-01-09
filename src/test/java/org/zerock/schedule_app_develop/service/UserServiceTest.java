@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
 import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
@@ -25,7 +26,7 @@ class UserServiceTest {
 
     @Test
     void createUser() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com","12345678");
         UserResponseDto user = userService.createUser(dto);
         assertThat(user.getCreateTime()).isEqualTo(user.getUpdateTime());
         assertThat(user.getUsername()).isEqualTo("test");
@@ -34,7 +35,7 @@ class UserServiceTest {
 
     @Test
     void findAll() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com","12345678");
         UserResponseDto user = userService.createUser(dto);
         UserResponseDto user1 = userService.createUser(dto);
 
@@ -44,7 +45,7 @@ class UserServiceTest {
 
     @Test
     void findById() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com","12345678");
         UserResponseDto user = userService.createUser(dto);
 
         UserResponseDto found = userService.findById(user.getId());
@@ -55,7 +56,7 @@ class UserServiceTest {
 
     @Test
     void updateUser() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com","12345678");
         UserResponseDto user = userService.createUser(dto);
 
         UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto("modified", "modified");
@@ -68,7 +69,7 @@ class UserServiceTest {
 
     @Test
     void deleteById() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com","12345678");
         UserResponseDto user = userService.createUser(dto);
 
         userService.deleteById(user.getId());

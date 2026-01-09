@@ -33,7 +33,7 @@ class ScheduleControllerTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.save(new User(new UserCreateRequestDto("tester", "tester@gmail.com")));
+        user = userRepository.save(new User(new UserCreateRequestDto("tester", "tester@gmail.com", "12345678")));
     }
 
     @Test

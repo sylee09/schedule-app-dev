@@ -30,7 +30,7 @@ class ScheduleServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.save(new User(new UserCreateRequestDto("tester", "tester@gmail.com")));
+        user = userRepository.save(new User(new UserCreateRequestDto("tester", "tester@gmail.com","12345678")));
         ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용",user.getId());
         scheduleService.createSchedule(dto);
         ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto( "제목", "내용",user.getId());

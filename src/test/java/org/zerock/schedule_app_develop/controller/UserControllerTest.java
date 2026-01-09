@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
 import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
@@ -27,7 +28,7 @@ class UserControllerTest {
 
     @Test
     void createUser() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com", "12345678");
         ResponseEntity<UserResponseDto> user = userController.createUser(dto);
         assertThat(user.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(user.getBody().getUsername()).isEqualTo("tester");
@@ -35,7 +36,7 @@ class UserControllerTest {
 
     @Test
     void getAllUsers() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com","12345678");
         userController.createUser(dto);
         userController.createUser(dto);
 
@@ -46,7 +47,7 @@ class UserControllerTest {
 
     @Test
     void getUserById() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com","12345678");
         ResponseEntity<UserResponseDto> user = userController.createUser(dto);
 
         ResponseEntity<UserResponseDto> found = userController.getUser(user.getBody().getId());
@@ -57,7 +58,7 @@ class UserControllerTest {
 
     @Test
     void updateUser() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com","12345678");
         ResponseEntity<UserResponseDto> user = userController.createUser(dto);
         UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto("modify", "modify@google.com");
         ResponseEntity<UserResponseDto> userResponseDtoResponseEntity = userController.updateUser(user.getBody().getId(), userUpdateRequestDto);
@@ -70,7 +71,7 @@ class UserControllerTest {
 
     @Test
     void deleteUser() {
-        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com");
+        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com","12345678");
         ResponseEntity<UserResponseDto> user = userController.createUser(dto);
         userController.deleteUser(user.getBody().getId());
 

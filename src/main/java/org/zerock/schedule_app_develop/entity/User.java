@@ -1,9 +1,11 @@
 package org.zerock.schedule_app_develop.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
 
@@ -17,6 +19,7 @@ public class User extends BaseEntity{
     private Long id;
     private String username;
     private String email;
+    private String password;
 
     public User(UserCreateRequestDto dto) {
         this.username = dto.getUsername();

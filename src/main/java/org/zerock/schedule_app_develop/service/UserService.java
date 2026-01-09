@@ -1,5 +1,6 @@
 package org.zerock.schedule_app_develop.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserResponseDto createUser(UserCreateRequestDto dto){
+    public UserResponseDto createUser(UserCreateRequestDto dto) {
         User user = new User(dto);
         User save = userRepository.save(user);
         return new UserResponseDto(save);
