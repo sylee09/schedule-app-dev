@@ -46,4 +46,9 @@ public class ScheduleService {
         return new ScheduleResponse(schedule);
     }
 
+    @Transactional
+    public void deleteSchedule(Long id) {
+        scheduleRepository.deleteById(id);
+    }
+
 }

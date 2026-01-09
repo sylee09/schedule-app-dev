@@ -76,4 +76,10 @@ class ScheduleServiceTest {
         assertThat(scheduleResponse.getModifiedTime()).isNotEqualTo(scheduleResponse.getStartTime());
     }
 
+    @Test
+    @DisplayName("deleteSchedule")
+    void deleteSchedule() {
+        scheduleService.deleteSchedule(1L);
+        assertThatThrownBy(()->scheduleService.viewSchedule(1L)).isInstanceOf(ScheduleNotFoundException.class);
+    }
 }
