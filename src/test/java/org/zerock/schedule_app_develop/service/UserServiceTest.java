@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
+import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
 import org.zerock.schedule_app_develop.error.UserNotFoundException;
 
 import java.util.List;
@@ -50,6 +51,19 @@ class UserServiceTest {
         assertThat(found.getUsername()).isEqualTo("test");
 
         assertThatThrownBy(()->userService.findById(1000L)).isInstanceOf(UserNotFoundException.class);
+    }
+
+    @Test
+    void updateUser() {
+        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com");
+        UserResponseDto user = userService.createUser(dto);
+
+        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto("modified", "modified");
+        userService.modify(user.getId(), userUpdateRequestDto);
+        UserResponseDto found = userService.findById(user.getId());
+
+        assertThat(found.getUsername()).isEqualTo("modified");
+        assertThat(found.getUpdateTime()).isAfter(found.getCreateTime());
     }
 
     @Test

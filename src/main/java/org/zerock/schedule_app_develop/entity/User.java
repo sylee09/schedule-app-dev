@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
+import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
 
 @Entity
 @Table(name = "users")
@@ -18,6 +19,11 @@ public class User extends BaseEntity{
     private String email;
 
     public User(UserCreateRequestDto dto) {
+        this.username = dto.getUsername();
+        this.email = dto.getEmail();
+    }
+
+    public void change(UserUpdateRequestDto dto) {
         this.username = dto.getUsername();
         this.email = dto.getEmail();
     }

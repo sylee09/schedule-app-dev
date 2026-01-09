@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
+import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
 import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.error.UserNotFoundException;
 import org.zerock.schedule_app_develop.repository.UserRepository;
@@ -33,6 +34,15 @@ public class UserService {
 
     public UserResponseDto findById(Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return new UserResponseDto(user);
+    }
+
+    @Transactional
+    public UserResponseDto modify(Long id, UserUpdateRequestDto dto) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        user.change(dto);
+
+        userRepository.saveAndFlush(user);
         return new UserResponseDto(user);
     }
 
