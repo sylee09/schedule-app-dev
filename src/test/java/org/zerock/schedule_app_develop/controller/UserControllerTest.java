@@ -68,4 +68,13 @@ class UserControllerTest {
         assertThatThrownBy(() -> userController.updateUser(1000L, userUpdateRequestDto)).isInstanceOf(UserNotFoundException.class);
     }
 
+    @Test
+    void deleteUser() {
+        UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com");
+        ResponseEntity<UserResponseDto> user = userController.createUser(dto);
+        userController.deleteUser(user.getBody().getId());
+
+        assertThatThrownBy(() -> userController.getUser(user.getBody().getId())).isInstanceOf(UserNotFoundException.class);
+    }
+
 }
