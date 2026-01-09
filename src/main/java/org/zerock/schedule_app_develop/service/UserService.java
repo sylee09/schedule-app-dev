@@ -14,10 +14,13 @@ import org.zerock.schedule_app_develop.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Transactional
     public UserResponseDto createUser(UserCreateRequestDto dto){
         User user = new User(dto);
         User save = userRepository.save(user);
         return new UserResponseDto(save);
     }
+
+
 
 }
