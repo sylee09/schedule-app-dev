@@ -1,0 +1,29 @@
+package org.zerock.schedule_app_develop.service;
+
+import jakarta.transaction.Transactional;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
+import org.zerock.schedule_app_develop.dto.UserResponseDto;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+@Transactional
+class UserServiceTest {
+
+    @Autowired
+    private UserService userService;
+
+    @Test
+    void createUser() {
+        UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com");
+        UserResponseDto user = userService.createUser(dto);
+        assertThat(user.getCreateTime()).isEqualTo(user.getUpdateTime());
+        assertThat(user.getUsername()).isEqualTo("test");
+        assertThat(user.getId()).isNotNull();
+    }
+}
