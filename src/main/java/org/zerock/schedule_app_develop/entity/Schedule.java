@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.zerock.schedule_app_develop.dto.ScheduleCreateRequestDto;
+import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
 
 @Entity
 @Table(name = "schedules")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 public class Schedule extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,11 @@ public class Schedule extends BaseEntity {
 
     public Schedule(ScheduleCreateRequestDto dto) {
         this.userName = dto.getUserName();
+        this.subject = dto.getSubject();
+        this.content = dto.getContent();
+    }
+
+    public void modify(ScheduleUpdateRequestDto dto) {
         this.subject = dto.getSubject();
         this.content = dto.getContent();
     }

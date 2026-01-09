@@ -41,8 +41,7 @@ public class ScheduleService {
     @Transactional
     public ScheduleResponseDto updateSchedule(Long id, ScheduleUpdateRequestDto dto) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new ScheduleNotFoundException("Schedule not found"));
-        schedule.setSubject(dto.getSubject());
-        schedule.setContent(dto.getContent());
+        schedule.modify(dto);
         scheduleRepository.saveAndFlush(schedule);
         return new ScheduleResponseDto(schedule);
     }
