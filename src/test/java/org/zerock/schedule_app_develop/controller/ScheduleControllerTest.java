@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.zerock.schedule_app_develop.dto.ScheduleCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.ScheduleResponseDto;
+import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
 import org.zerock.schedule_app_develop.error.ScheduleNotFoundException;
 
 import java.util.List;
@@ -59,5 +60,19 @@ class ScheduleControllerTest {
         assertThat(scheduleById.getBody().getSubject()).isEqualTo(schedule.getBody().getSubject());
 
         assertThatThrownBy(() -> scheduleController.getScheduleById(10000L)).isInstanceOf(ScheduleNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("updateSchedule")
+    void updateSchedule() {
+        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("lee", "제목", "내용");
+        ResponseEntity<ScheduleResponseDto> schedule = scheduleController.createSchedule(dto1);
+        ScheduleUpdateRequestDto scheduleUpdateRequestDto = new ScheduleUpdateRequestDto("modified", "modified");
+        ResponseEntity<ScheduleResponseDto> updated = scheduleController.updateSchedule(schedule.getBody().getId(), scheduleUpdateRequestDto);
+        assertThat(updated.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(updated.getBody().getModifiedTime()).isAfter(updated.getBody().getCreatedTime());
+        assertThat(updated.getBody().getSubject()).isEqualTo(scheduleUpdateRequestDto.getSubject());
+
+        assertThatThrownBy(() -> scheduleController.updateSchedule(10000L, scheduleUpdateRequestDto)).isInstanceOf(ScheduleNotFoundException.class);
     }
 }

@@ -42,7 +42,7 @@ public class ScheduleService {
     public ScheduleResponseDto updateSchedule(Long id, ScheduleUpdateRequestDto dto) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new ScheduleNotFoundException("Schedule not found"));
         schedule.modify(dto);
-        scheduleRepository.saveAndFlush(schedule);
+        schedule = scheduleRepository.saveAndFlush(schedule);
         return new ScheduleResponseDto(schedule);
     }
 

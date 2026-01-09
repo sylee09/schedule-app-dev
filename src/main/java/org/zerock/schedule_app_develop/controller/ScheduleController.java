@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.schedule_app_develop.dto.ScheduleCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.ScheduleResponseDto;
+import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
 import org.zerock.schedule_app_develop.service.ScheduleService;
 
 import java.util.List;
@@ -30,6 +31,11 @@ public class ScheduleController {
     @GetMapping("/schedules/{id}")
     public ResponseEntity<ScheduleResponseDto> getScheduleById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.viewSchedule(id));
+    }
+
+    @PatchMapping("/schedules/{id}")
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id, @RequestBody ScheduleUpdateRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.updateSchedule(id, dto));
     }
 
 }
