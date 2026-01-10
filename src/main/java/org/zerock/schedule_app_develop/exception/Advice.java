@@ -1,13 +1,10 @@
-package org.zerock.schedule_app_develop.controller;
+package org.zerock.schedule_app_develop.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.zerock.schedule_app_develop.exception.LoginException;
-import org.zerock.schedule_app_develop.exception.ScheduleNotFoundException;
-import org.zerock.schedule_app_develop.exception.UserNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
