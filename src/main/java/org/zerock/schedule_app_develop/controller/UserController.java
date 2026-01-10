@@ -1,10 +1,14 @@
 package org.zerock.schedule_app_develop.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.zerock.schedule_app_develop.dto.LoginRequestDto;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
 import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
@@ -41,5 +45,18 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/login")
+    public UserResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest httpServletRequest) {
+        UserResponseDto login = userService.login(loginRequestDto);
+
+        // 세션 생성하기 전에 기존의 세션 파기
+        httpServletRequest.getSession().invalidate();
+        HttpSession session = httpServletRequest.getSession(true);
+        session.setAttribute("login", login);
+        session.setMaxInactiveInterval(30 * 60);
+
+        return login;
     }
 }

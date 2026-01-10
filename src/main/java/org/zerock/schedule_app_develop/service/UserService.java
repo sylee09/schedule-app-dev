@@ -1,14 +1,15 @@
 package org.zerock.schedule_app_develop.service;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zerock.schedule_app_develop.dto.LoginRequestDto;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
 import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
 import org.zerock.schedule_app_develop.entity.User;
-import org.zerock.schedule_app_develop.error.UserNotFoundException;
+import org.zerock.schedule_app_develop.exception.LoginException;
+import org.zerock.schedule_app_develop.exception.UserNotFoundException;
 import org.zerock.schedule_app_develop.repository.UserRepository;
 
 import java.util.List;
@@ -52,6 +53,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-
-
+    @Transactional
+    public UserResponseDto login(LoginRequestDto loginRequestDto) {
+        return userRepository.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword()).orElseThrow(() -> new LoginException("이메일 또는 비밀번호가 틀렸습니다."));
+    }
 }

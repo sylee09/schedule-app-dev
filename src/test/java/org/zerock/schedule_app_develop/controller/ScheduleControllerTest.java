@@ -13,7 +13,7 @@ import org.zerock.schedule_app_develop.dto.ScheduleResponseDto;
 import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.entity.User;
-import org.zerock.schedule_app_develop.error.ScheduleNotFoundException;
+import org.zerock.schedule_app_develop.exception.ScheduleNotFoundException;
 import org.zerock.schedule_app_develop.repository.UserRepository;
 
 import java.util.List;
