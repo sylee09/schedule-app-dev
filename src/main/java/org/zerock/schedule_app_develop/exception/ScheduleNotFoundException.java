@@ -1,4 +1,4 @@
-package org.zerock.schedule_app_develop.error;
+package org.zerock.schedule_app_develop.exception;
 
 public class ScheduleNotFoundException extends RuntimeException {
     public ScheduleNotFoundException() {

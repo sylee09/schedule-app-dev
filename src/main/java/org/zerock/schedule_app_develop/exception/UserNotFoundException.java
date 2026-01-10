@@ -1,4 +1,4 @@
-package org.zerock.schedule_app_develop.error;
+package org.zerock.schedule_app_develop.exception;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException() {

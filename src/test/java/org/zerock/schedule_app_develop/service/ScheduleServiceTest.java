@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zerock.schedule_app_develop.dto.*;
 import org.zerock.schedule_app_develop.entity.User;
-import org.zerock.schedule_app_develop.error.ScheduleNotFoundException;
+import org.zerock.schedule_app_develop.exception.ScheduleNotFoundException;
 import org.zerock.schedule_app_develop.repository.UserRepository;
 
 import java.util.List;
