@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.zerock.schedule_app_develop.dto.LoginSessionAttribute;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
 import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
@@ -58,12 +59,13 @@ class UserControllerTest {
         UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com","12345678");
         ResponseEntity<UserResponseDto> user = userController.createUser(dto);
         UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto("modify", "modify@google.com");
-        ResponseEntity<UserResponseDto> userResponseDtoResponseEntity = userController.updateUser(user.getBody().getId(), userUpdateRequestDto);
+        LoginSessionAttribute loginSessionAttribute = new LoginSessionAttribute(user.getBody().getId());
+        ResponseEntity<UserResponseDto> userResponseDtoResponseEntity = userController.updateUser(user.getBody().getId(), userUpdateRequestDto,loginSessionAttribute);
         assertThat(userResponseDtoResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(userResponseDtoResponseEntity.getBody().getUsername()).isEqualTo("modify");
         assertThat(userResponseDtoResponseEntity.getBody().getUpdateTime()).isAfter(userResponseDtoResponseEntity.getBody().getCreateTime());
 
-        assertThatThrownBy(() -> userController.updateUser(1000L, userUpdateRequestDto)).isInstanceOf(UserNotFoundException.class);
+        assertThatThrownBy(() -> userController.updateUser(1000L, userUpdateRequestDto, loginSessionAttribute)).isInstanceOf(UserNotFoundException.class);
     }
 
     @Test

@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,5 +34,18 @@ public class Advice {
     @ExceptionHandler(LoginException.class)
     public ResponseEntity<String> handleLoginException(LoginException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<String> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
+        if (e.getSQLState().equals("23000")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이메일이 중복되면 안됩니다.");
+        }
+       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }

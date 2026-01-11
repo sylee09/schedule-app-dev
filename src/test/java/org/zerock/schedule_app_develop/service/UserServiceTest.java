@@ -1,12 +1,15 @@
 package org.zerock.schedule_app_develop.service;
 
 import jakarta.transaction.Transactional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.zerock.schedule_app_develop.dto.LoginSessionAttribute;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
 import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
+import org.zerock.schedule_app_develop.exception.UnauthorizedException;
 import org.zerock.schedule_app_develop.exception.UserNotFoundException;
 
 import java.util.List;
@@ -55,13 +58,15 @@ class UserServiceTest {
     void updateUser() {
         UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com","12345678");
         UserResponseDto user = userService.createUser(dto);
+        LoginSessionAttribute loginSessionAttribute = new LoginSessionAttribute(user.getId());
 
         UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto("modified", "modified");
-        userService.modify(user.getId(), userUpdateRequestDto);
-        UserResponseDto found = userService.findById(user.getId());
+        UserResponseDto modify = userService.modify(user.getId(), userUpdateRequestDto, loginSessionAttribute);
 
-        assertThat(found.getUsername()).isEqualTo("modified");
-        assertThat(found.getUpdateTime()).isAfter(found.getCreateTime());
+        assertThat(modify.getUsername()).isEqualTo("modified");
+        assertThat(modify.getUpdateTime()).isAfter(modify.getCreateTime());
+
+        assertThatThrownBy(()->userService.modify(user.getId(), userUpdateRequestDto, null)).isExactlyInstanceOf(UnauthorizedException.class);
     }
 
     @Test

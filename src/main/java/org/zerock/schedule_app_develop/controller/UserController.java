@@ -8,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.zerock.schedule_app_develop.dto.LoginRequestDto;
-import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
-import org.zerock.schedule_app_develop.dto.UserResponseDto;
-import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
+import org.zerock.schedule_app_develop.dto.*;
 import org.zerock.schedule_app_develop.service.UserService;
 
 import java.util.List;
@@ -37,8 +34,8 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequestDto dto) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.modify(id, dto));
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequestDto dto, @SessionAttribute("login") LoginSessionAttribute login) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.modify(id, dto, login));
     }
 
     @DeleteMapping("/users/{id}")
@@ -48,8 +45,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest httpServletRequest) {
-        UserResponseDto login = userService.login(loginRequestDto);
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest httpServletRequest) {
+        LoginSessionAttribute login = userService.login(loginRequestDto);
 
         // 세션 생성하기 전에 기존의 세션 파기
         httpServletRequest.getSession().invalidate();
@@ -57,6 +54,7 @@ public class UserController {
         session.setAttribute("login", login);
         session.setMaxInactiveInterval(30 * 60);
 
-        return login;
+        return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
     }
+
 }

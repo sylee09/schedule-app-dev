@@ -3,12 +3,10 @@ package org.zerock.schedule_app_develop.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.zerock.schedule_app_develop.dto.LoginRequestDto;
-import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
-import org.zerock.schedule_app_develop.dto.UserResponseDto;
-import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
+import org.zerock.schedule_app_develop.dto.*;
 import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.exception.LoginException;
+import org.zerock.schedule_app_develop.exception.UnauthorizedException;
 import org.zerock.schedule_app_develop.exception.UserNotFoundException;
 import org.zerock.schedule_app_develop.repository.UserRepository;
 
@@ -40,8 +38,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto modify(Long id, UserUpdateRequestDto dto) {
+    public UserResponseDto modify(Long id, UserUpdateRequestDto dto, LoginSessionAttribute login) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        if (login == null || !user.getId().equals(login.getId())) {
+            throw new UnauthorizedException("Unauthorized");
+        }
+
         user.change(dto);
 
         userRepository.saveAndFlush(user);
@@ -54,7 +56,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto login(LoginRequestDto loginRequestDto) {
+    public LoginSessionAttribute login(LoginRequestDto loginRequestDto) {
         return userRepository.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword()).orElseThrow(() -> new LoginException("이메일 또는 비밀번호가 틀렸습니다."));
     }
 }
