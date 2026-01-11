@@ -40,7 +40,7 @@ public class UserService {
     @Transactional
     public UserResponseDto modify(Long id, UserUpdateRequestDto dto, LoginSessionAttribute login) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
-        if (login == null || !user.getId().equals(login.getId())) {
+        if (!user.getId().equals(login.getId())) {
             throw new UnauthorizedException("Unauthorized");
         }
 
@@ -52,7 +52,7 @@ public class UserService {
 
     @Transactional
     public void deleteById(Long id, LoginSessionAttribute login) {
-        if (login == null || !login.getId().equals(id)) {
+        if (!login.getId().equals(id)) {
             throw new UnauthorizedException("Unauthorized");
         }
         userRepository.deleteById(id);
