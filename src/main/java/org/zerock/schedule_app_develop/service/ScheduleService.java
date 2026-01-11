@@ -15,6 +15,7 @@ import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.exception.ScheduleNotFoundException;
 import org.zerock.schedule_app_develop.exception.UnAuthorizedException;
 import org.zerock.schedule_app_develop.exception.UserNotFoundException;
+import org.zerock.schedule_app_develop.repository.CommentRepository;
 import org.zerock.schedule_app_develop.repository.ScheduleRepository;
 import org.zerock.schedule_app_develop.repository.UserRepository;
 
@@ -24,10 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ScheduleService {
-    @Autowired
     private final ScheduleRepository scheduleRepository;
-    @Autowired
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public ScheduleResponseDto createSchedule(ScheduleCreateRequestDto dto) {
@@ -63,6 +63,8 @@ public class ScheduleService {
         if(schedule.getUser().getId() != login.getId()) {
             throw new UnAuthorizedException("권한 없음");
         }
+        // 참조 무결성으로 인해 연관된 것들 먼저 제거.
+        commentRepository.deleteByScheduleId(id);
         scheduleRepository.deleteById(id);
     }
 
