@@ -15,4 +15,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Query("select s from Schedule s left join fetch s.user")
     Page<Schedule> findAll(Pageable pageable);
+
+    void deleteByUserId(Long id);
 }

@@ -9,6 +9,8 @@ import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.exception.LoginException;
 import org.zerock.schedule_app_develop.exception.UnAuthorizedException;
 import org.zerock.schedule_app_develop.exception.UserNotFoundException;
+import org.zerock.schedule_app_develop.repository.CommentRepository;
+import org.zerock.schedule_app_develop.repository.ScheduleRepository;
 import org.zerock.schedule_app_develop.repository.UserRepository;
 
 import java.util.List;
@@ -19,6 +21,9 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ScheduleService scheduleService;
+    private final CommentRepository commentRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Transactional
     public UserResponseDto createUser(UserCreateRequestDto dto) {
@@ -58,6 +63,9 @@ public class UserService {
         if (!login.getId().equals(id)) {
             throw new UnAuthorizedException("Unauthorized");
         }
+        // 참조 무결성 때문에 user와 연관된것들 먼저 제거하고 user 제거
+        commentRepository.deleteByUserId(id);
+        scheduleRepository.deleteByUserId(id);
         userRepository.deleteById(id);
     }
 
