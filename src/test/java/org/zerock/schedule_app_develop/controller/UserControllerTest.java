@@ -72,7 +72,8 @@ class UserControllerTest {
     void deleteUser() {
         UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com","12345678");
         ResponseEntity<UserResponseDto> user = userController.createUser(dto);
-        userController.deleteUser(user.getBody().getId());
+        LoginSessionAttribute loginSessionAttribute = new LoginSessionAttribute(user.getBody().getId());
+        userController.deleteUser(user.getBody().getId(), loginSessionAttribute);
 
         assertThatThrownBy(() -> userController.getUser(user.getBody().getId())).isInstanceOf(UserNotFoundException.class);
     }

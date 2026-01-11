@@ -73,8 +73,9 @@ class UserServiceTest {
     void deleteById() {
         UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com","12345678");
         UserResponseDto user = userService.createUser(dto);
+        LoginSessionAttribute loginSessionAttribute = new LoginSessionAttribute(user.getId());
 
-        userService.deleteById(user.getId());
+        userService.deleteById(user.getId(), loginSessionAttribute);
 
         assertThatThrownBy(()->userService.findById(user.getId())).isInstanceOf(UserNotFoundException.class);
     }

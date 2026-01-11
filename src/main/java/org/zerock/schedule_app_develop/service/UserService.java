@@ -51,7 +51,10 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(Long id, LoginSessionAttribute login) {
+        if (login == null || !login.getId().equals(id)) {
+            throw new UnauthorizedException("Unauthorized");
+        }
         userRepository.deleteById(id);
     }
 
