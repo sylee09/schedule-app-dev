@@ -21,12 +21,4 @@ public class UserResponseDto {
         this.createTime = user.getCreateTime();
         this.updateTime = user.getUpdateTime();
     }
-
-    public UserResponseDto(Long id, String username, String email, LocalDateTime createTime, LocalDateTime updateTime) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
-    }
 }
