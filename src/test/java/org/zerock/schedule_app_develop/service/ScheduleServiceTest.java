@@ -31,18 +31,23 @@ class ScheduleServiceTest {
     @BeforeEach
     void setUp() {
         user = userRepository.save(new User(new UserCreateRequestDto("tester", "tester@gmail.com","12345678")));
-        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용",user.getId());
+        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용");
+        dto.setUserId(user.getId());
+        LoginSessionAttribute loginSessionAttribute = new LoginSessionAttribute(dto.getUserId());
         scheduleService.createSchedule(dto);
-        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto( "제목", "내용",user.getId());
+        ScheduleCreateRequestDto dto1 = new ScheduleCreateRequestDto("제목", "내용");
+        dto1.setUserId(user.getId());
         scheduleService.createSchedule(dto1);
-        ScheduleCreateRequestDto dto2 = new ScheduleCreateRequestDto( "제목", "내용",user.getId());
+        ScheduleCreateRequestDto dto2 = new ScheduleCreateRequestDto("제목", "내용");
+        dto2.setUserId(user.getId());
         scheduleService.createSchedule(dto2);
     }
 
     @Test
     @DisplayName("createSchedule")
     void createSchedule() {
-        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto( "제목", "내용",user.getId());
+        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용");
+        dto.setUserId(user.getId());
         // 예외가 발생하지 않는다고 기대
         assertDoesNotThrow(() -> scheduleService.createSchedule(dto));
     }
@@ -71,11 +76,13 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("updateSchedule")
     void updateSchedule() {
-        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용",user.getId());
+        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용");
+        dto.setUserId(user.getId());
         ScheduleResponseDto scheduleResponse = scheduleService.createSchedule(dto);
 
         ScheduleUpdateRequestDto scheduleUpdateRequestDto = new ScheduleUpdateRequestDto("수정", "수정");
-        scheduleService.updateSchedule(scheduleResponse.getId(), scheduleUpdateRequestDto);
+        LoginSessionAttribute loginSessionAttribute = new LoginSessionAttribute(user.getId());
+        scheduleService.updateSchedule(scheduleResponse.getId(), scheduleUpdateRequestDto, loginSessionAttribute);
         ScheduleResponseDto scheduleResponseDto = scheduleService.viewSchedule(scheduleResponse.getId());
         assertThat(scheduleResponseDto.getSubject()).isEqualTo("수정");
         assertThat(scheduleResponseDto.getContent()).isEqualTo("수정");
@@ -85,9 +92,10 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("deleteSchedule")
     void deleteSchedule() {
-        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용",user.getId());
+        ScheduleCreateRequestDto dto = new ScheduleCreateRequestDto("제목", "내용");
+        dto.setUserId(user.getId());
         ScheduleResponseDto scheduleResponse = scheduleService.createSchedule(dto);
-        scheduleService.deleteSchedule(scheduleResponse.getId());
+        scheduleService.deleteSchedule(scheduleResponse.getId(), new LoginSessionAttribute(user.getId()));
         assertThatThrownBy(()->scheduleService.viewSchedule(scheduleResponse.getId())).isInstanceOf(ScheduleNotFoundException.class);
     }
 }

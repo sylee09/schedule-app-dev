@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.schedule_app_develop.dto.*;
 import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.exception.LoginException;
-import org.zerock.schedule_app_develop.exception.UnauthorizedException;
+import org.zerock.schedule_app_develop.exception.UnAuthorizedException;
 import org.zerock.schedule_app_develop.exception.UserNotFoundException;
 import org.zerock.schedule_app_develop.repository.UserRepository;
 
@@ -41,7 +41,7 @@ public class UserService {
     public UserResponseDto modify(Long id, UserUpdateRequestDto dto, LoginSessionAttribute login) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
         if (!user.getId().equals(login.getId())) {
-            throw new UnauthorizedException("Unauthorized");
+            throw new UnAuthorizedException("Unauthorized");
         }
 
         user.change(dto);
@@ -53,7 +53,7 @@ public class UserService {
     @Transactional
     public void deleteById(Long id, LoginSessionAttribute login) {
         if (!login.getId().equals(id)) {
-            throw new UnauthorizedException("Unauthorized");
+            throw new UnAuthorizedException("Unauthorized");
         }
         userRepository.deleteById(id);
     }

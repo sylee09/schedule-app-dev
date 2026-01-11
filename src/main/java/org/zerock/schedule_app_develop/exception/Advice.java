@@ -36,8 +36,8 @@ public class Advice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException e) {
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ResponseEntity<String> handleUnauthorizedException(UnAuthorizedException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 

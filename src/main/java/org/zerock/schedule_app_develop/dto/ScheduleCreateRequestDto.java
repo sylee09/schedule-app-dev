@@ -9,9 +9,12 @@ public class ScheduleCreateRequestDto {
     private String content;
     private Long userId;
 
-    public ScheduleCreateRequestDto(String subject, String content, Long userId) {
+    public ScheduleCreateRequestDto(String subject, String content) {
         this.subject = subject;
         this.content = content;
+    }
+
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 }

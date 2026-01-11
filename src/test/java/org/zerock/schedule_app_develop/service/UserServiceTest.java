@@ -1,7 +1,6 @@
 package org.zerock.schedule_app_develop.service;
 
 import jakarta.transaction.Transactional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +8,7 @@ import org.zerock.schedule_app_develop.dto.LoginSessionAttribute;
 import org.zerock.schedule_app_develop.dto.UserCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.UserResponseDto;
 import org.zerock.schedule_app_develop.dto.UserUpdateRequestDto;
-import org.zerock.schedule_app_develop.exception.UnauthorizedException;
+import org.zerock.schedule_app_develop.exception.UnAuthorizedException;
 import org.zerock.schedule_app_develop.exception.UserNotFoundException;
 
 import java.util.List;
@@ -37,7 +36,8 @@ class UserServiceTest {
     void findAll() {
         UserCreateRequestDto dto = new UserCreateRequestDto("test", "test@google.com","12345678");
         UserResponseDto user = userService.createUser(dto);
-        UserResponseDto user1 = userService.createUser(dto);
+        UserCreateRequestDto dto1 = new UserCreateRequestDto("test1", "test1@google.com","12345678");
+        UserResponseDto user1 = userService.createUser(dto1);
 
         List<UserResponseDto> users = userService.findAll();
         assertThat(users.size()).isEqualTo(2);
@@ -60,13 +60,14 @@ class UserServiceTest {
         UserResponseDto user = userService.createUser(dto);
         LoginSessionAttribute loginSessionAttribute = new LoginSessionAttribute(user.getId());
 
-        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto("modified", "modified");
+        UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto("modified", "modified@gmail.com");
         UserResponseDto modify = userService.modify(user.getId(), userUpdateRequestDto, loginSessionAttribute);
 
         assertThat(modify.getUsername()).isEqualTo("modified");
         assertThat(modify.getUpdateTime()).isAfter(modify.getCreateTime());
 
-        assertThatThrownBy(()->userService.modify(user.getId(), userUpdateRequestDto, null)).isExactlyInstanceOf(UnauthorizedException.class);
+        LoginSessionAttribute loginSessionAttribute1 = new LoginSessionAttribute(1000L);
+        assertThatThrownBy(()->userService.modify(user.getId(), userUpdateRequestDto, loginSessionAttribute1)).isExactlyInstanceOf(UnAuthorizedException.class);
     }
 
     @Test

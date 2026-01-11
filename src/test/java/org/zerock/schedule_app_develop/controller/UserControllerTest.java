@@ -36,7 +36,8 @@ class UserControllerTest {
     void getAllUsers() {
         UserCreateRequestDto dto = new UserCreateRequestDto("tester", "test@gmail.com","12345678");
         userController.createUser(dto);
-        userController.createUser(dto);
+        UserCreateRequestDto dto1 = new UserCreateRequestDto("tester1", "test123@gmail.com","12345678");
+        userController.createUser(dto1);
 
         ResponseEntity<List<UserResponseDto>> allUsers = userController.getAllUsers();
         assertThat(allUsers.getStatusCode()).isEqualTo(HttpStatus.OK);
