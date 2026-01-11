@@ -43,6 +43,7 @@ public class Advice {
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<String> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
+        // 23000이 db constraint 오류코드
         if (e.getSQLState().equals("23000")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이메일이 중복되면 안됩니다.");
         }

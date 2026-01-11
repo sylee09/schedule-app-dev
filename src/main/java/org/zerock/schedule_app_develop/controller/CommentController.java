@@ -24,11 +24,13 @@ public class CommentController {
     private final ScheduleService scheduleService;
 
     @GetMapping("/schedules/comments")
+    // 로그인 된 사람만 접근 가능
     public ResponseEntity<List<CommentResponseDto>> getComments(@SessionAttribute("login") LoginSessionAttribute login) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getComments());
     }
 
     @PostMapping("/schedules/{id}/comments")
+    // 로그인 된 사람만 접근 가능
     public ResponseEntity<CommentResponseDto> createComment(@SessionAttribute("login") LoginSessionAttribute login, @RequestBody CommentRequestDto commentRequestDto, @PathVariable("id") Long scheduleId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(commentRequestDto, scheduleId, login));
     }

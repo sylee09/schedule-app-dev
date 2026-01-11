@@ -34,11 +34,15 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}")
+    // 로그인 된 사람만 접근 가능
+    // 로그인 된 사람이 수정하고자 하는 유저와 같은 경우만 수정 가능
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequestDto dto, @SessionAttribute("login") LoginSessionAttribute login) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.modify(id, dto, login));
     }
 
     @DeleteMapping("/users/{id}")
+    // 로그인 된 사람만 접근 가능
+    // 로그인 된 사람이 삭제하고자 하는 유저와 같은 경우만 수정 가능
     public ResponseEntity<Void> deleteUser(@PathVariable Long id, @SessionAttribute("login") LoginSessionAttribute login) {
         userService.deleteById(id, login);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

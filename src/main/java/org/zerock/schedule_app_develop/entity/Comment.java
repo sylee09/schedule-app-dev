@@ -14,10 +14,12 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 댓글은 일정없이 존재할 수 없다.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
     private Schedule schedule;
 
+    // 댓글은 유저없이 존재할 수 없다.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
     private User user;
