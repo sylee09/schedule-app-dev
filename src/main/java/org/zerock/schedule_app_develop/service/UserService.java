@@ -3,6 +3,7 @@ package org.zerock.schedule_app_develop.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zerock.schedule_app_develop.config.PasswordEncoder;
 import org.zerock.schedule_app_develop.dto.*;
 import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.exception.LoginException;
@@ -17,10 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponseDto createUser(UserCreateRequestDto dto) {
-        User user = new User(dto);
+        String encodedPassword = passwordEncoder.encode(dto.getPassword());
+        User user = new User(dto.getUsername(), dto.getEmail(), encodedPassword);
         User save = userRepository.save(user);
         return new UserResponseDto(save);
     }
@@ -60,6 +63,11 @@ public class UserService {
 
     @Transactional
     public LoginSessionAttribute login(LoginRequestDto loginRequestDto) {
-        return userRepository.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword()).orElseThrow(() -> new LoginException("이메일 또는 비밀번호가 틀렸습니다."));
+        User user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(() -> new LoginException("Invalid email"));
+        if (passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
+            return new LoginSessionAttribute(user.getId());
+        } else {
+            throw new LoginException("Invalid password");
+        }
     }
 }

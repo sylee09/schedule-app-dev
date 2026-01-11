@@ -29,6 +29,12 @@ public class User extends BaseEntity{
         this.password = dto.getPassword();
     }
 
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
     public void change(UserUpdateRequestDto dto) {
         this.username = dto.getUsername();
         this.email = dto.getEmail();
