@@ -2,6 +2,8 @@ package org.zerock.schedule_app_develop.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.schedule_app_develop.dto.LoginSessionAttribute;
@@ -34,11 +36,9 @@ public class ScheduleService {
         return new ScheduleResponseDto(save);
     }
 
-    public List<ScheduleResponseDto> viewAllSchedules() {
-        return scheduleRepository.findAll()
-                .stream()
-                .map(schedule -> new ScheduleResponseDto(schedule))
-                .toList();
+    public Page<ScheduleResponseDto> viewAllSchedules(Pageable pageable) {
+        return scheduleRepository.findAll(pageable)
+                .map(schedule -> new ScheduleResponseDto(schedule));
     }
 
     public ScheduleResponseDto viewSchedule(Long id) {

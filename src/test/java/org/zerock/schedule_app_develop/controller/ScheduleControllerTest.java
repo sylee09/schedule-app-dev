@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.zerock.schedule_app_develop.dto.*;
@@ -60,9 +61,9 @@ class ScheduleControllerTest {
         LoginSessionAttribute loginSessionAttribute2 = new LoginSessionAttribute(dto2.getUserId());
         scheduleController.createSchedule(dto2, loginSessionAttribute2);
 
-        ResponseEntity<List<ScheduleResponseDto>> allSchedules = scheduleController.getAllSchedules(loginSessionAttribute);
+        ResponseEntity<Page<ScheduleResponseDto>> allSchedules = scheduleController.getAllSchedules(loginSessionAttribute, 0, 10);
         assertThat(allSchedules.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(allSchedules.getBody().size()).isEqualTo(2);
+        assertThat(allSchedules.getBody().getTotalElements()).isEqualTo(2);
     }
 
     @Test

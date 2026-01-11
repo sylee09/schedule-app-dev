@@ -1,6 +1,10 @@
 package org.zerock.schedule_app_develop.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +13,7 @@ import org.zerock.schedule_app_develop.dto.LoginSessionAttribute;
 import org.zerock.schedule_app_develop.dto.ScheduleCreateRequestDto;
 import org.zerock.schedule_app_develop.dto.ScheduleResponseDto;
 import org.zerock.schedule_app_develop.dto.ScheduleUpdateRequestDto;
+import org.zerock.schedule_app_develop.entity.Schedule;
 import org.zerock.schedule_app_develop.service.ScheduleService;
 
 import java.util.List;
@@ -26,8 +31,10 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedules")
-    public ResponseEntity<List<ScheduleResponseDto>> getAllSchedules(@SessionAttribute("login")  LoginSessionAttribute login) {
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.viewAllSchedules());
+    public ResponseEntity<Page<ScheduleResponseDto>> getAllSchedules(@SessionAttribute("login") LoginSessionAttribute login, @RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "updateTime"));
+        Page<ScheduleResponseDto> scheduleResponseDtos = scheduleService.viewAllSchedules(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseDtos);
     }
 
     @GetMapping("/schedules/{id}")

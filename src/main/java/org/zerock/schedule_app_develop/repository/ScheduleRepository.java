@@ -1,5 +1,7 @@
 package org.zerock.schedule_app_develop.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.zerock.schedule_app_develop.entity.Schedule;
@@ -12,5 +14,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Optional<Schedule> findById(Long id);
 
     @Query("select s from Schedule s left join fetch s.user")
-    List<Schedule> findAll();
+    Page<Schedule> findAll(Pageable pageable);
 }

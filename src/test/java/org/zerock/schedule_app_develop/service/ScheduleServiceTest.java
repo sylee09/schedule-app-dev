@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.zerock.schedule_app_develop.dto.*;
 import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.exception.ScheduleNotFoundException;
@@ -55,13 +57,13 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("viewAllSchedules")
     void viewAllSchedules() {
-        List<ScheduleResponseDto> scheduleResponseDtos = scheduleService.viewAllSchedules();
-        assertThat(scheduleResponseDtos.size()).isEqualTo(3);
-        assertThat(scheduleResponseDtos.get(0).getSubject()).isEqualTo("제목");
-        assertThat(scheduleResponseDtos.get(0).getContent()).isEqualTo("내용");
-        assertThat(scheduleResponseDtos.get(0).getCreatedTime()).isNotNull();
-        assertThat(scheduleResponseDtos.get(0).getModifiedTime()).isNotNull();
-        assertThat(scheduleResponseDtos.get(0).getModifiedTime()).isEqualTo(scheduleResponseDtos.get(0).getCreatedTime());
+        Page<ScheduleResponseDto> scheduleResponseDtos = scheduleService.viewAllSchedules(PageRequest.of(0, 10));
+        assertThat(scheduleResponseDtos.getTotalElements()).isEqualTo(3);
+        assertThat(scheduleResponseDtos.getContent().get(0).getSubject()).isEqualTo("제목");
+        assertThat(scheduleResponseDtos.getContent().get(0).getContent()).isEqualTo("내용");
+        assertThat(scheduleResponseDtos.getContent().get(0).getCreatedTime()).isNotNull();
+        assertThat(scheduleResponseDtos.getContent().get(0).getModifiedTime()).isNotNull();
+        assertThat(scheduleResponseDtos.getContent().get(0).getModifiedTime()).isEqualTo(scheduleResponseDtos.getContent().get(0).getCreatedTime());
     }
 
     @Test
