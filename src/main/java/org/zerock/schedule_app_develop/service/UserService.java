@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.schedule_app_develop.config.PasswordEncoder;
 import org.zerock.schedule_app_develop.dto.*;
+import org.zerock.schedule_app_develop.entity.Schedule;
 import org.zerock.schedule_app_develop.entity.User;
 import org.zerock.schedule_app_develop.exception.LoginException;
 import org.zerock.schedule_app_develop.exception.UnAuthorizedException;
@@ -65,7 +66,11 @@ public class UserService {
         }
         // 참조 무결성 때문에 user와 연관된것들 먼저 제거하고 user 제거
         commentRepository.deleteByUserId(id);
-        scheduleRepository.deleteByUserId(id);
+        List<Schedule> schedules = scheduleRepository.findByUserId(id);
+        for(Schedule schedule : schedules){
+            commentRepository.deleteByScheduleId(schedule.getId());
+            scheduleRepository.deleteById(schedule.getId());
+        }
         userRepository.deleteById(id);
     }
 
