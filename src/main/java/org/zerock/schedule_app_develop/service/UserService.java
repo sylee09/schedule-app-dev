@@ -66,11 +66,8 @@ public class UserService {
         }
         // 참조 무결성 때문에 user와 연관된것들 먼저 제거하고 user 제거
         commentRepository.deleteByUserId(id);
-        List<Schedule> schedules = scheduleRepository.findByUserId(id);
-        for(Schedule schedule : schedules){
-            commentRepository.deleteByScheduleId(schedule.getId());
-            scheduleRepository.deleteById(schedule.getId());
-        }
+        commentRepository.deleteCommentWithInQuery(id);
+        scheduleRepository.deleteByUserId(id);
         userRepository.deleteById(id);
     }
 
