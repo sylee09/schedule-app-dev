@@ -52,3 +52,4 @@ https://documenter.getpostman.com/view/37347999/2sBXVfiqtW
   - 전체 일정을 조회하는 경우 페이징 적용
 
 ### trouble shooting
+https://velog.io/@sy99/%EC%88%99%EB%A0%A8-Spring%EC%9D%BC%EC%A0%95-%EA%B4%80%EB%A6%AC-%EC%95%B1
